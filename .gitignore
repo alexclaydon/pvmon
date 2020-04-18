@@ -1,0 +1,6 @@
+/.idea/
+/.un~
+/__pycache__
+/data/
+/service-cfg.yml
+/geckodriver.log

@@ -1,0 +1,41 @@
+---
+defaults:
+  download:
+    mode: days
+    days: 30
+  analyse:
+    analysis_window: 3
+    sms_on_anomaly: True
+    sms_on_no_anomaly: False
+  visualise:
+    mode: "sensor"
+
+users:
+  <user1>:
+    contact_name:
+    contact_email:
+    twilio:
+      account_sid:
+      auth_token:
+      to_phone:
+      from_phone:
+    ecomegane:
+      login:
+      pass:
+      replacements:
+        project_name:
+        sensor_num:
+    user_settings:
+      download:
+        mode: days
+        days: 60
+        start_date: "2019/06/01"
+        end_date: "2020/01/01"
+      analyse:
+        analysis_window: 3
+        sms_on_anomaly: True
+        sms_on_no_anomaly: True
+      visualise:
+        mode: "sensor"
+  <user2>:
+
