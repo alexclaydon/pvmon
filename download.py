@@ -1,4 +1,4 @@
-from libs.logger import local_logger
+from libs.liblogger import local_logger
 import codecs
 import datetime
 import pickle
