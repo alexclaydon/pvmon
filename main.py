@@ -1,19 +1,24 @@
 import yaml
 from client import Client
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 
-def main():
+if __name__ == "__main__":
     with open(file="service-cfg.yml", mode="r") as f:
         all_user_data = yaml.safe_load(f)
     clients = {}
     for key in all_user_data["users"].keys():
         clients[key] = Client(config_key=key)
-    for key, instance in clients.items():
-        instance.download_data()
-        instance.process_data()
-        instance.analyse_data()
-        instance.notify()
 
+    def main():
+        for client, instance in clients.items():
+            instance.download_data()
+            instance.process_data()
+            instance.analyse_data()
+            instance.notify()
 
-if __name__ == "__main__":
-    main()
+    scheduler = BlockingScheduler()
+    scheduler.add_job(
+        main, 'interval', hours=24
+    )
+    scheduler.start()
