@@ -1,5 +1,5 @@
+from .client import Client
 import yaml
-from client import Client
 from apscheduler.schedulers.blocking import BlockingScheduler
 
 

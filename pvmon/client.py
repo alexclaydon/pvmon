@@ -1,20 +1,20 @@
 from libs.liblogger import local_logger
 import yaml
 from pathlib import Path
-from download import (
+from pvmon.download import (
     config_firefox_driver,
     _load_cookies,
     _pickle_cookies,
     select_data_by_days,
     encode_utf8,
 )
-from analyse import (
+from pvmon.analyse import (
     load_data,
     relabel_data,
     transform_data,
     analyse_data_consecutive_days,
 )
-from notify import log_event, sms_event
+from pvmon.notify import log_event, sms_event
 from libs.libnotify import notify_to_pushover
 
 
