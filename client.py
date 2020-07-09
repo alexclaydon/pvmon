@@ -15,6 +15,8 @@ from analyse import (
     analyse_data_consecutive_days,
 )
 from notify import log_event, sms_event
+from libs.libnotify import notify_to_pushover
+
 
 # TODO: Consider whether BeautifulSoup could be a drop in replacement for Selenium
 
@@ -131,16 +133,17 @@ class Client:
         return self.analysis
 
     def notify(self):
-        sms_event(
-            messages=self.analysis,
-            account_sid=self.user_data["twilio"]["account_sid"],
-            auth_token=self.user_data["twilio"]["auth_token"],
-            to_phone=self.user_data["twilio"]["to_phone"],
-            from_phone=self.user_data["twilio"]["from_phone"],
-            sms_on_no_anomaly=self.user_data["user_settings"]["analyse"][
-                "sms_on_no_anomaly"
-            ],
-        )
+        notify_to_pushover(self.analysis)
+        # sms_event(
+        #     messages=self.analysis,
+        #     account_sid=self.user_data["twilio"]["account_sid"],
+        #     auth_token=self.user_data["twilio"]["auth_token"],
+        #     to_phone=self.user_data["twilio"]["to_phone"],
+        #     from_phone=self.user_data["twilio"]["from_phone"],
+        #     sms_on_no_anomaly=self.user_data["user_settings"]["analyse"][
+        #         "sms_on_no_anomaly"
+        #     ],
+        # )
 
     def visualise_data(self):
         pass

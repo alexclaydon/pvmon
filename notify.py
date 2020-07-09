@@ -42,6 +42,17 @@ def sms_event(
     from_phone,
     sms_on_no_anomaly: bool = False,
 ):
+    """
+    This function is temporarily re-directed to use the Pushover API for notifications, instead of Twilio.  The reason you have to redirect this function is that it mangles together the message processing operation with the sending operation; rather than untangle them right now I'm just monkeypatching it.  #TODO: Will need to extricate the two later.
+
+    :param messages:
+    :param account_sid:
+    :param auth_token:
+    :param to_phone:
+    :param from_phone:
+    :param sms_on_no_anomaly:
+    :return:
+    """
     client = Client(account_sid, auth_token,)
     if messages:
         try:
