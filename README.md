@@ -1,3 +1,5 @@
+![Python package](https://github.com/alexclaydon/pvmon/workflows/Python%20package/badge.svg)
+
 # pvmon
 
 Designed to assist with simplifying and automating the monitoring of solar photovoltaic installations making use of NTT's ecomegane subscription service delivered over LTE.  Written in a combination of object-oriented and functional styles.  
