@@ -4,3 +4,5 @@
 /data/
 /service-cfg.yml
 /geckodriver.log
+/venv
+.DS_Store
