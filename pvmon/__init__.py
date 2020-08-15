@@ -1,1 +1,1 @@
-from .client import Client  # noqa: F401
+from pvmon.app import Pvmon

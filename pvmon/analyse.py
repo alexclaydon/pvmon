@@ -1,4 +1,4 @@
-from libs.liblogger import local_logger
+from liblogger.legacy import local_logger
 import pandas as pd
 
 
@@ -29,9 +29,9 @@ def load_data(file):
 
 
 def relabel_data(df, replacements_dict):
-    for key, value in replacements_dict.items():
-        for subkey, subvalue in value.items():
-            df[key] = df[key].str.replace(subkey, subvalue)
+    # for key, value in replacements_dict.items():
+    #     for subkey, subvalue in value.items():
+    #         df[key] = df[key].str.replace(subkey, subvalue)
     return df
 
 
@@ -46,12 +46,12 @@ def transform_data(df):
         columns="sensor_num",
     )
     pivot_df = pivot_df[
-        ~pivot_df["02"].isnull()
-    ]  # Removes all rows where there is no sensor data for S02 (being, at least on the basis of all the data I've seen to date, those projects which do not break out individual sensor data)
-    pivot_df["aggregate_kwh"] = pivot_df["01"] + pivot_df["02"] + pivot_df["03"]
-    pivot_df["S01"] = pivot_df["01"] / pivot_df["aggregate_kwh"]
-    pivot_df["S02"] = pivot_df["02"] / pivot_df["aggregate_kwh"]
-    pivot_df["S03"] = pivot_df["03"] / pivot_df["aggregate_kwh"]
+        ~pivot_df["センサー02"].isnull()
+    ]  # Removes all rows where there is no sensor data for sensor 02 (being, at least on the basis of all the data I've seen to date, those projects which do not break out individual sensor data)
+    pivot_df["aggregate_kwh"] = pivot_df["センサー01"] + pivot_df["センサー02"] + pivot_df["センサー03"]
+    pivot_df["S01"] = pivot_df["センサー01"] / pivot_df["aggregate_kwh"]
+    pivot_df["S02"] = pivot_df["センサー02"] / pivot_df["aggregate_kwh"]
+    pivot_df["S03"] = pivot_df["センサー03"] / pivot_df["aggregate_kwh"]
     return pivot_df
 
 

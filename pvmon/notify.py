@@ -1,4 +1,4 @@
-from libs.liblogger import local_logger
+from liblogger.legacy import local_logger
 from twilio.rest import Client
 
 
@@ -32,6 +32,7 @@ def log_event(records):
     if not records[0]:
         log_msg = "No anomaly logged at this time"
         local_logger.info(log_msg)
+        return log_msg
 
 
 def sms_event(

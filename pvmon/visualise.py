@@ -1,4 +1,4 @@
-from libs.liblogger import local_logger
+from liblogger.legacy import local_logger
 from matplotlib import pyplot as plt
 
 

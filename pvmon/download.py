@@ -1,4 +1,4 @@
-from libs.liblogger import local_logger
+from liblogger.legacy import local_logger
 import codecs
 import datetime
 import pickle
@@ -10,12 +10,17 @@ def config_firefox_driver(download_dir):
     try:
         options = webdriver.firefox.options.Options()
         options.headless = True
-        options.set_preference("browser.download.folderList", 2)
-        options.set_preference("browser.download.manager.showWhenStarting", False)
         options.set_preference("browser.download.dir", str(download_dir))
+        options.set_preference("browser.download.folderList", 2)
         options.set_preference(
             "browser.helperApps.neverAsk.saveToDisk",
-            "text/plain, text/csv, application/csv, application/excel, text/comma-separated-values",
+            "text/plain, text/csv, application/csv, application/excel, text/comma-separated-values, application/comma-separated-values",
+        )
+        options.set_preference(
+            "browser.helperApps.alwaysAsk.force", False
+        )
+        options.set_preference(
+            "browser.download.manager.showWhenStarting", False
         )
         options.set_preference("pdfjs.disabled", True)
         driver = webdriver.Firefox(

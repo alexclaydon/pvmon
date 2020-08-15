@@ -1,6 +1,7 @@
 matplotlib>=3.2.1
 PyYAML>=5.3.1
 pandas>=1.0.3
-selenium>=3.141.0
+selenium
 twilio>=6.37.0
 APScheduler~=3.6.3
+python-dotenv
