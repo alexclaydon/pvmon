@@ -8,8 +8,9 @@ from pvmon.download import (
     encode_utf8,
 )
 from pvmon.analyse import (
-    load_data,
-    transform_data,
+    load_data_for_multi_sensor_projects,
+    transform_data_for_multi_sensor_projects,
+    transform_data_for_single_sensor_projects,
     analyse_data_consecutive_days,
 )
 from pvmon.notify import log_event, sms_event
@@ -31,8 +32,10 @@ class Client:
         self.logged_in = False
         self.csv_production_data = None
         self._locate_csv_production_data()
-        self.df_production_data = None
-        self.analysis = None
+        self.df_production_data_multi_sensor = None
+        self.df_production_data_single_sensor = None
+        self.analysis_multi_sensor = None
+        self.analysis_single_sensor = None
 
     def _locate_csv_production_data(self):
         for file in self.data_dir.iterdir():
@@ -98,32 +101,35 @@ class Client:
                 "There is no .csv format production data present on disk.  "
                 "Please download before invoking this method."
             )
-        self.df_production_data = transform_data(
-            load_data(self.csv_production_data)
+        self.df_production_data_multi_sensor = transform_data_for_multi_sensor_projects(
+            load_data_for_multi_sensor_projects(self.csv_production_data)
             # relabel_data(
             #     load_data(self.csv_production_data),
             #     self.user_data["ecomegane"]["replacements"],
             # )
         )
+        self.df_production_data_single_sensor = transform_data_for_single_sensor_projects(
+            load_data_for_multi_sensor_projects(self.csv_production_data)
+        )
         msg = "Production data successfully loaded into memory and processed."
         local_logger.info(msg)
 
     def analyse_data(self):
-        if self.df_production_data is None:
+        if self.df_production_data_multi_sensor is None:
             return (
                 "There is no dataframe production data loaded in memory.  "
                 "Please process (after downloading, if necessary) before "
                 "invoking this method."
             )
-        self.analysis = log_event(
-            analyse_data_consecutive_days(self.df_production_data, days=3,)
+        self.analysis_multi_sensor = log_event(
+            analyse_data_consecutive_days(self.df_production_data_multi_sensor, days=3, )
         )
         local_logger.info("Data successfully analysed.")
 
     def notify(self):
-        if not self.analysis:
+        if not self.analysis_multi_sensor:
             return local_logger.warning('Please run analyse_data() at least once before calling this method.')
-        notify_to_pushover(self.analysis)
+        notify_to_pushover(self.analysis_multi_sensor)
 
     def _close_driver(self):
         if not self.driver:

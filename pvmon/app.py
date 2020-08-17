@@ -26,12 +26,6 @@ class Pvmon:
                 data_dir=CLIENTS_DATA_DIR / key,
             )
 
-        for client, instance in clients.items():
-            instance.download_data()
-            instance.process_data()
-            instance.analyse_data()
-            instance.notify()
-
         def main():
             for client, instance in clients.items():
                 instance.download_data()
@@ -39,8 +33,10 @@ class Pvmon:
                 instance.analyse_data()
                 instance.notify()
 
-            scheduler = BlockingScheduler()
-            scheduler.add_job(
-                main, 'interval', hours=24
-            )
-            scheduler.start()
+        main()
+
+        scheduler = BlockingScheduler()
+        scheduler.add_job(
+            main, 'interval', hours=1
+        )
+        scheduler.start()

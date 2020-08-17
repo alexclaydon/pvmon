@@ -5,7 +5,7 @@ import pandas as pd
 # TODO: To be refactored to make use of a validation library
 
 
-def load_data(file):
+def load_data_for_multi_sensor_projects(file):
     cols = [0, 1, 2, 3, 4, 5, 7, 9, 25]
     colnames = [
         "project_id",
@@ -28,6 +28,40 @@ def load_data(file):
     return df
 
 
+def load_data_for_single_sensor_projects(file):
+    cols = [0, 1, 2, 3, 4, 5, 7, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 23, 24, 25]
+    colnames = [
+        "project_id",
+        "project_name",
+        "sensor_num",
+        "sensor_id",
+        "location",
+        "observation_date",
+        "total_prod_kwh",
+        "total_sold_kwh",
+        "pcs#01_kwh",
+        "pcs#02_kwh",
+        "pcs#03_kwh",
+        "pcs#04_kwh",
+        "pcs#05_kwh",
+        "pcs#06_kwh",
+        "pcs#07_kwh",
+        "pcs#08_kwh",
+        "pcs#09_kwh",
+        "restricted_time",
+        "restricted_amount (%)",
+        "sale_type",
+    ]
+    df = pd.read_csv(
+        filepath_or_buffer=file,
+        usecols=cols,
+        header=0,
+        names=colnames,
+        encoding="utf_8",
+    )
+    return df
+
+
 def relabel_data(df, replacements_dict):
     # for key, value in replacements_dict.items():
     #     for subkey, subvalue in value.items():
@@ -35,7 +69,7 @@ def relabel_data(df, replacements_dict):
     return df
 
 
-def transform_data(df):
+def transform_data_for_multi_sensor_projects(df):
     """
     :param df: pandas data frame outputted by load_data()
     :return: data frame correctly pivoted for use with any of the analyse_...() functions
@@ -53,6 +87,26 @@ def transform_data(df):
     pivot_df["S02"] = pivot_df["センサー02"] / pivot_df["aggregate_kwh"]
     pivot_df["S03"] = pivot_df["センサー03"] / pivot_df["aggregate_kwh"]
     return pivot_df
+
+
+def transform_data_for_single_sensor_projects(df):
+    """
+    :param df: pandas data frame outputted by load_data()
+    :return: data frame correctly pivoted for use with any of the analyse_...() functions
+    """
+    # pivot_df = df.pivot_table(
+    #     values="total_prod_kwh",
+    #     index=["project_name", "observation_date"],
+    #     columns="sensor_num",
+    # )
+    df = df[
+        ~df["pcs#01_kwh"].isnull()
+    ]  # Removes all rows where there is no sensor data for sensor 02 (being, at least on the basis of all the data I've seen to date, those projects which do not break out individual sensor data)
+    # pivot_df["aggregate_kwh"] = pivot_df["センサー01"] + pivot_df["センサー02"] + pivot_df["センサー03"]
+    # pivot_df["S01"] = pivot_df["センサー01"] / pivot_df["aggregate_kwh"]
+    # pivot_df["S02"] = pivot_df["センサー02"] / pivot_df["aggregate_kwh"]
+    # pivot_df["S03"] = pivot_df["センサー03"] / pivot_df["aggregate_kwh"]
+    return df
 
 
 def analyse_data_single_days(df, days: int):
