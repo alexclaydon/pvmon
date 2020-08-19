@@ -5,3 +5,4 @@ selenium
 twilio>=6.37.0
 APScheduler~=3.6.3
 python-dotenv
+pytest
