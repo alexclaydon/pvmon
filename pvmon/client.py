@@ -9,11 +9,13 @@ from pvmon.download import (
 )
 from pvmon.analyse import (
     load_data_for_multi_sensor_projects,
+    load_data_for_single_sensor_projects,
     transform_data_for_multi_sensor_projects,
     transform_data_for_single_sensor_projects,
-    analyse_data_consecutive_days,
+    analyse_data_consecutive_days_multi_sensor,
+    analyse_data_consecutive_days_single_sensor
 )
-from pvmon.notify import log_event, sms_event
+from pvmon.notify import log_event
 from libnotify import notify_to_pushover
 
 
@@ -109,7 +111,7 @@ class Client:
             # )
         )
         self.df_production_data_single_sensor = transform_data_for_single_sensor_projects(
-            load_data_for_multi_sensor_projects(self.csv_production_data)
+            load_data_for_single_sensor_projects(self.csv_production_data)
         )
         msg = "Production data successfully loaded into memory and processed."
         local_logger.info(msg)
@@ -122,14 +124,26 @@ class Client:
                 "invoking this method."
             )
         self.analysis_multi_sensor = log_event(
-            analyse_data_consecutive_days(self.df_production_data_multi_sensor, days=3, )
+            analyse_data_consecutive_days_multi_sensor(
+                self.df_production_data_multi_sensor, days=3
+            )
+        )
+        self.analysis_single_sensor = log_event(
+            analyse_data_consecutive_days_single_sensor(
+                self.df_production_data_single_sensor, days=3
+            )
         )
         local_logger.info("Data successfully analysed.")
 
     def notify(self):
         if not self.analysis_multi_sensor:
-            return local_logger.warning('Please run analyse_data() at least once before calling this method.')
-        notify_to_pushover(self.analysis_multi_sensor)
+            local_logger.warning('Please analyse multi-sensor data at least once before calling this method.')
+        if self.analysis_multi_sensor:
+            notify_to_pushover(self.analysis_multi_sensor)
+        if not self.analysis_single_sensor:
+            return local_logger.warning('Please analyse singe-sensor data at least once before calling this method.')
+        if self.analysis_single_sensor:
+            notify_to_pushover(self.analysis_single_sensor)
 
     def _close_driver(self):
         if not self.driver:

@@ -74,14 +74,13 @@ def transform_data_for_multi_sensor_projects(df):
     :param df: pandas data frame outputted by load_data()
     :return: data frame correctly pivoted for use with any of the analyse_...() functions
     """
+    indexNames = df[df['sensor_num'] == 'EIGセンサー01'].index
+    df.drop(indexNames, inplace=True)
     pivot_df = df.pivot_table(
         values="total_prod_kwh",
         index=["project_name", "observation_date"],
         columns="sensor_num",
     )
-    pivot_df = pivot_df[
-        ~pivot_df["センサー02"].isnull()
-    ]  # Removes all rows where there is no sensor data for sensor 02 (being, at least on the basis of all the data I've seen to date, those projects which do not break out individual sensor data)
     pivot_df["aggregate_kwh"] = pivot_df["センサー01"] + pivot_df["センサー02"] + pivot_df["センサー03"]
     pivot_df["S01"] = pivot_df["センサー01"] / pivot_df["aggregate_kwh"]
     pivot_df["S02"] = pivot_df["センサー02"] / pivot_df["aggregate_kwh"]
@@ -90,23 +89,37 @@ def transform_data_for_multi_sensor_projects(df):
 
 
 def transform_data_for_single_sensor_projects(df):
-    """
-    :param df: pandas data frame outputted by load_data()
-    :return: data frame correctly pivoted for use with any of the analyse_...() functions
-    """
-    # pivot_df = df.pivot_table(
-    #     values="total_prod_kwh",
-    #     index=["project_name", "observation_date"],
-    #     columns="sensor_num",
-    # )
     df = df[
         ~df["pcs#01_kwh"].isnull()
-    ]  # Removes all rows where there is no sensor data for sensor 02 (being, at least on the basis of all the data I've seen to date, those projects which do not break out individual sensor data)
-    # pivot_df["aggregate_kwh"] = pivot_df["センサー01"] + pivot_df["センサー02"] + pivot_df["センサー03"]
-    # pivot_df["S01"] = pivot_df["センサー01"] / pivot_df["aggregate_kwh"]
-    # pivot_df["S02"] = pivot_df["センサー02"] / pivot_df["aggregate_kwh"]
-    # pivot_df["S03"] = pivot_df["センサー03"] / pivot_df["aggregate_kwh"]
-    return df
+    ]
+    pivot_df = df.pivot_table(
+        values=[
+            "total_prod_kwh",
+            "pcs#01_kwh",
+            "pcs#02_kwh",
+            "pcs#03_kwh",
+            "pcs#04_kwh",
+            "pcs#05_kwh",
+            "pcs#06_kwh",
+            "pcs#07_kwh",
+            "pcs#08_kwh",
+            "pcs#09_kwh",
+        ],
+        index=[
+            "project_name",
+            "observation_date"
+        ],
+    )
+    pivot_df["S01"] = pivot_df["pcs#01_kwh"] / pivot_df["total_prod_kwh"]
+    pivot_df["S02"] = pivot_df["pcs#02_kwh"] / pivot_df["total_prod_kwh"]
+    pivot_df["S03"] = pivot_df["pcs#03_kwh"] / pivot_df["total_prod_kwh"]
+    pivot_df["S04"] = pivot_df["pcs#04_kwh"] / pivot_df["total_prod_kwh"]
+    pivot_df["S05"] = pivot_df["pcs#05_kwh"] / pivot_df["total_prod_kwh"]
+    pivot_df["S06"] = pivot_df["pcs#06_kwh"] / pivot_df["total_prod_kwh"]
+    pivot_df["S07"] = pivot_df["pcs#07_kwh"] / pivot_df["total_prod_kwh"]
+    pivot_df["S08"] = pivot_df["pcs#08_kwh"] / pivot_df["total_prod_kwh"]
+    pivot_df["S09"] = pivot_df["pcs#09_kwh"] / pivot_df["total_prod_kwh"]
+    return pivot_df
 
 
 def analyse_data_single_days(df, days: int):
@@ -138,7 +151,7 @@ def analyse_data_single_days(df, days: int):
     return records, days
 
 
-def analyse_data_consecutive_days(df, days: int):
+def analyse_data_consecutive_days_multi_sensor(df, days: int):
     # TODO: Fix the mean() calculation at 30 days rather than, if given, using a larger number of samples
     """
     Calculation method taken from https://stackoverflow.com/questions/59836303/select-rows-where-3-consecutive-values-match-condition-python-pandas
@@ -163,6 +176,39 @@ def analyse_data_consecutive_days(df, days: int):
                 intermed.map(intermed.value_counts())
                 .ge(2)
                 .reindex(sensor.index, fill_value=False)
+            ]
+            # NB if you remove the .tail(days) from sensor, it will return the whole series instead of just the window period; good to remember for debugging
+            if result.any():
+                records[project + " / " + col] = result.to_dict()
+                records[project + " / " + col]["mean"] = round(
+                    sensor.mean() * 100, ndigits=2
+                )
+    local_logger.info("Downloaded data successfully analysed")
+    return records, days
+
+
+def analyse_data_consecutive_days_single_sensor(df, days: int):
+    records = {}
+    for project in df.index.get_level_values(0).unique():
+        select = df.loc[df.index.get_level_values(0).isin([project])]
+        if days > len(select.index):
+            local_logger.warning(
+                f"days parameter passed (days={days}) was greater than number of records available ({len(select.index)}); reducing days parameter accordingly"
+            )
+            days = len(select.index)
+        cols = [
+            "S01", "S02", "S03",
+            "S04", "S05", "S06",
+            "S07", "S08", "S09",
+        ]
+        for col in cols:
+            sensor = select[col]
+            key = sensor.gt((abs(sensor - sensor.mean())) < (sensor.mean() * 0.20))
+            intermed = (~key).cumsum()[key]
+            result = sensor.tail(days)[
+                intermed.map(intermed.value_counts())
+                    .ge(2)
+                    .reindex(sensor.index, fill_value=False)
             ]
             # NB if you remove the .tail(days) from sensor, it will return the whole series instead of just the window period; good to remember for debugging
             if result.any():
