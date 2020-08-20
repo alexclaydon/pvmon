@@ -1,4 +1,4 @@
-from libs.logger import local_logger
+from liblogger.legacy import local_logger
 import codecs
 import datetime
 import pickle
@@ -10,14 +10,30 @@ def config_firefox_driver(download_dir):
     try:
         options = webdriver.firefox.options.Options()
         options.headless = True
-        options.set_preference("browser.download.folderList", 2)
-        options.set_preference("browser.download.manager.showWhenStarting", False)
         options.set_preference("browser.download.dir", str(download_dir))
+        options.set_preference("browser.download.folderList", 2)
         options.set_preference(
             "browser.helperApps.neverAsk.saveToDisk",
-            "text/plain, text/csv, application/csv, application/excel, text/comma-separated-values",
+            "attachment/csv, text/plain,text/csv,text/x-csv,application/csv,application/x-csv,text/comma-separated-values,text/x-comma-separated-values,text/tab-separated-values,application/excel,text/comma-separated-values,application/comma-separated-values",
         )
-        options.set_preference("pdfjs.disabled", True)
+        options.set_preference(
+            "browser.helperApps.alwaysAsk.force", False
+        )
+        options.set_preference(
+            "browser.download.manager.showWhenStarting", False
+        )
+        options.set_preference(
+            "browser.download.panel.shown", False
+        )
+        options.set_preference(
+            "browser.download.alwaysOpenInSystemViewerContextMenuItem",
+            False
+        )
+        options.set_preference(
+            "browser.download.openInSystemViewerContextMenuItem",
+            False
+        )
+        # options.set_preference("pdfjs.disabled", True)
         driver = webdriver.Firefox(
             firefox_options=options, service_log_path="geckodriver.log"
         )

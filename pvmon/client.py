@@ -1,47 +1,43 @@
-from libs.logger import local_logger
-import yaml
+from liblogger.legacy import local_logger
 from pathlib import Path
-from download import (
+from pvmon.download import (
     config_firefox_driver,
     _load_cookies,
     _pickle_cookies,
     select_data_by_days,
     encode_utf8,
 )
-from analyse import (
-    load_data,
-    relabel_data,
-    transform_data,
-    analyse_data_consecutive_days,
+from pvmon.analyse import (
+    load_data_for_multi_sensor_projects,
+    load_data_for_single_sensor_projects,
+    transform_data_for_multi_sensor_projects,
+    transform_data_for_single_sensor_projects,
+    analyse_data_consecutive_days_multi_sensor,
+    analyse_data_consecutive_days_single_sensor
 )
-from notify import log_event, sms_event
+from pvmon.notify import log_event
+from libnotify import notify_to_pushover
+
 
 # TODO: Consider whether BeautifulSoup could be a drop in replacement for Selenium
 
 
 class Client:
-    def __init__(self, config_key: str):
-        self.config_key = config_key
-        self.user_data = self._load_user_data()
-        self.data_dir = Path.cwd() / "data" / self.config_key
-        if not Path.exists(self.data_dir):
-            self.data_dir.mkdir(parents=True, exist_ok=True)
+    def __init__(
+            self,
+            user_data: dict,
+            data_dir: Path,
+    ):
+        self.user_data = user_data
+        self.data_dir = data_dir
         self.driver = None
         self.logged_in = False
         self.csv_production_data = None
         self._locate_csv_production_data()
-        if self.csv_production_data:
-            self.process_data()
-        else:
-            self.df_production_data = None
-        self.analysis = None
-
-    def _load_user_data(self, file="service-cfg.yml"):
-        with open(file, "r") as f:
-            all_user_data = yaml.safe_load(f)
-            # Using safe_load() method is required to overcome a deficiency with the way the ordinary load() method handles numbers
-        local_logger.info("User data located and parsed into memory.")
-        return all_user_data["users"][self.config_key]
+        self.df_production_data_multi_sensor = None
+        self.df_production_data_single_sensor = None
+        self.analysis_multi_sensor = None
+        self.analysis_single_sensor = None
 
     def _locate_csv_production_data(self):
         for file in self.data_dir.iterdir():
@@ -76,7 +72,7 @@ class Client:
                     driver=self.driver, cookies_file=self.data_dir / "cookies.pkl"
                 )
             self.logged_in = True
-            return local_logger.info(
+            local_logger.info(
                 "You've been successfully logged in.  Proceeding to data download."
             )
 
@@ -98,7 +94,7 @@ class Client:
                 encode_utf8(file.as_posix())
         self._locate_csv_production_data()
         self._close_driver()
-        return "Data successfully downloaded and re-encoded."
+        local_logger.info("Data successfully downloaded and re-encoded.")
 
     def process_data(self):
         if not self.csv_production_data:
@@ -107,43 +103,47 @@ class Client:
                 "There is no .csv format production data present on disk.  "
                 "Please download before invoking this method."
             )
-        self.df_production_data = transform_data(
-            relabel_data(
-                load_data(self.csv_production_data),
-                self.user_data["ecomegane"]["replacements"],
-            )
+        self.df_production_data_multi_sensor = transform_data_for_multi_sensor_projects(
+            load_data_for_multi_sensor_projects(self.csv_production_data)
+            # relabel_data(
+            #     load_data(self.csv_production_data),
+            #     self.user_data["ecomegane"]["replacements"],
+            # )
+        )
+        self.df_production_data_single_sensor = transform_data_for_single_sensor_projects(
+            load_data_for_single_sensor_projects(self.csv_production_data)
         )
         msg = "Production data successfully loaded into memory and processed."
         local_logger.info(msg)
-        return msg
 
     def analyse_data(self):
-        if self.df_production_data is None:
+        if self.df_production_data_multi_sensor is None:
             return (
                 "There is no dataframe production data loaded in memory.  "
                 "Please process (after downloading, if necessary) before "
                 "invoking this method."
             )
-        self.analysis = log_event(
-            analyse_data_consecutive_days(self.df_production_data, days=3,)
+        self.analysis_multi_sensor = log_event(
+            analyse_data_consecutive_days_multi_sensor(
+                self.df_production_data_multi_sensor, days=3
+            )
+        )
+        self.analysis_single_sensor = log_event(
+            analyse_data_consecutive_days_single_sensor(
+                self.df_production_data_single_sensor, days=3
+            )
         )
         local_logger.info("Data successfully analysed.")
-        return self.analysis
 
     def notify(self):
-        sms_event(
-            messages=self.analysis,
-            account_sid=self.user_data["twilio"]["account_sid"],
-            auth_token=self.user_data["twilio"]["auth_token"],
-            to_phone=self.user_data["twilio"]["to_phone"],
-            from_phone=self.user_data["twilio"]["from_phone"],
-            sms_on_no_anomaly=self.user_data["user_settings"]["analyse"][
-                "sms_on_no_anomaly"
-            ],
-        )
-
-    def visualise_data(self):
-        pass
+        if not self.analysis_multi_sensor:
+            local_logger.warning('Please analyse multi-sensor data at least once before calling this method.')
+        if self.analysis_multi_sensor:
+            notify_to_pushover(self.analysis_multi_sensor)
+        if not self.analysis_single_sensor:
+            return local_logger.warning('Please analyse singe-sensor data at least once before calling this method.')
+        if self.analysis_single_sensor:
+            notify_to_pushover(self.analysis_single_sensor)
 
     def _close_driver(self):
         if not self.driver:
@@ -156,4 +156,4 @@ class Client:
         return f"Class: {self.__class__.__qualname__} "
 
     def __repr__(self):
-        return f"Client(config_key={self.config_key})"
+        pass

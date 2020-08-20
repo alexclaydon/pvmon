@@ -1,6 +1,12 @@
 /.idea/
 /.un~
 /__pycache__
-/data/
-/service-cfg.yml
 /geckodriver.log
+/venv
+.DS_Store
+/pvmon/resources/service-cfg.yml
+/pvmon/resources/db
+/pvmon/resources/client-data
+/.env
+*.pyc
+*.log
