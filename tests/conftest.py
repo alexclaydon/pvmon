@@ -1,8 +1,8 @@
-import pytest
-from liblogger.legacy import local_logger
-import pandas as pd
 import random
 
+import pandas as pd
+import pytest
+from liblogger.legacy import local_logger
 
 source_ecomegane_test_data = {
     'project_id': random.sample(range(10, 30), 10),

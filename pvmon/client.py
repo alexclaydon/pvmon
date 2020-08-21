@@ -1,23 +1,24 @@
-from liblogger.legacy import local_logger
 from pathlib import Path
-from pvmon.download import (
-    config_firefox_driver,
-    _load_cookies,
-    _pickle_cookies,
-    select_data_by_days,
-    encode_utf8,
-)
+
+from liblogger.legacy import local_logger
+from libnotify import notify_to_pushover
+
 from pvmon.analyse import (
+    analyse_data_consecutive_days_multi_sensor,
+    analyse_data_consecutive_days_single_sensor,
     load_data_for_multi_sensor_projects,
     load_data_for_single_sensor_projects,
     transform_data_for_multi_sensor_projects,
     transform_data_for_single_sensor_projects,
-    analyse_data_consecutive_days_multi_sensor,
-    analyse_data_consecutive_days_single_sensor
+)
+from pvmon.download import (
+    _load_cookies,
+    _pickle_cookies,
+    config_firefox_driver,
+    encode_utf8,
+    select_data_by_days,
 )
 from pvmon.notify import log_event
-from libnotify import notify_to_pushover
-
 
 # TODO: Consider whether BeautifulSoup could be a drop in replacement for Selenium
 

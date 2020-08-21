@@ -1,8 +1,10 @@
-from pvmon.client import Client
+from pathlib import Path
+
 import yaml
 from apscheduler.schedulers.blocking import BlockingScheduler
-from pathlib import Path
 from dotenv import load_dotenv
+
+from pvmon.client import Client
 
 load_dotenv()
 

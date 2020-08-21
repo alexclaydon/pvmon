@@ -1,8 +1,9 @@
-from liblogger.legacy import local_logger
 import codecs
 import datetime
 import pickle
 import sys
+
+from liblogger.legacy import local_logger
 from selenium import webdriver
 
 
