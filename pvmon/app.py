@@ -37,6 +37,6 @@ class Pvmon:
 
         scheduler = BlockingScheduler()
         scheduler.add_job(
-            main, 'interval', hours=1
+            main, 'interval', hours=24
         )
         scheduler.start()
