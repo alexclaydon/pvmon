@@ -14,7 +14,7 @@ def config_firefox_driver(download_dir):
         options.set_preference("browser.download.folderList", 2)
         options.set_preference(
             "browser.helperApps.neverAsk.saveToDisk",
-            "attachment/csv, text/plain,text/csv,text/x-csv,application/csv,application/x-csv,text/comma-separated-values,text/x-comma-separated-values,text/tab-separated-values,application/excel,text/comma-separated-values,application/comma-separated-values",
+            "text/plain, application/octet-stream, application/binary, text/csv, application/csv, application/excel, text/comma-separated-values, text/xml, application/xml",
         )
         options.set_preference(
             "browser.helperApps.alwaysAsk.force", False
