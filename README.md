@@ -2,6 +2,8 @@
 
 ![Python package](https://github.com/alexclaydon/pvmon/workflows/Python%20package/badge.svg)
 
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+
 Designed to assist with simplifying and automating the monitoring of solar photovoltaic installations making use of NTT's ecomegane subscription service delivered over LTE.  Written in a combination of object-oriented and functional styles.  
 
 Originally developed to meet a specific business need.  No affiliation with NTT generally or the ecomegane service in particular.
