@@ -87,7 +87,7 @@ class Client:
         self.driver.get("https://eco-megane.jp/index.php")
         self.driver.find_element_by_id("personal_menu").click()
         self.driver.find_element_by_id("personal_edit").click()
-        select_data_by_days(self.driver, days=30)
+        select_data_by_days(self.driver, days=90)
         self.driver.find_element_by_id("measureGenerateAmountBtn").click()
         local_logger.info("Data successfully downloaded.")
         for file in self.data_dir.iterdir():
