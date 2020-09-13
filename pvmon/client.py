@@ -1,7 +1,10 @@
+import http.client
+import os
+import urllib
+
 from pathlib import Path
 
 from liblogger.legacy import local_logger
-from libnotify import notify_to_pushover
 
 from pvmon.analyse import (
     analyse_data_consecutive_days_multi_sensor,
@@ -137,14 +140,25 @@ class Client:
         local_logger.info("Data successfully analysed.")
 
     def notify(self):
+        def notify_to_pushover(message: str):
+            conn = http.client.HTTPSConnection("api.pushover.net:443")
+            conn.request("POST", "/1/messages.json",
+                         urllib.parse.urlencode({
+                             "token": os.getenv("PUSHOVER_TOKEN"),
+                             "user": os.getenv("PUSHOVER_USER"),
+                             "message": message,
+                         }), { "Content-type": "application/x-www-form-urlencoded" })
+            conn.getresponse()
         if not self.analysis_multi_sensor:
             local_logger.warning('Please analyse multi-sensor data at least once before calling this method.')
         if self.analysis_multi_sensor:
             notify_to_pushover('Multi-sensor projects: ' + self.analysis_multi_sensor)
+            local_logger.info('Called notify_to_pushover() function for multi-sensir projects without exception')
         if not self.analysis_single_sensor:
             return local_logger.warning('Please analyse singe-sensor data at least once before calling this method.')
         if self.analysis_single_sensor:
-            notify_to_pushover('Multi-sensor projects: ' + self.analysis_single_sensor)
+            notify_to_pushover('Single-sensor projects: ' + self.analysis_single_sensor)
+            local_logger.info('Called notify_to_pushover() function for single-sensor projects without exception')
 
     def _close_driver(self):
         if not self.driver:

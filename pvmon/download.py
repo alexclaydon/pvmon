@@ -17,23 +17,23 @@ def config_firefox_driver(download_dir):
             "browser.helperApps.neverAsk.saveToDisk",
             "text/plain, application/octet-stream, application/binary, text/csv, application/csv, application/excel, text/comma-separated-values, text/xml, application/xml",
         )
-        options.set_preference(
-            "browser.helperApps.alwaysAsk.force", False
-        )
-        options.set_preference(
-            "browser.download.manager.showWhenStarting", False
-        )
-        options.set_preference(
-            "browser.download.panel.shown", False
-        )
-        options.set_preference(
-            "browser.download.alwaysOpenInSystemViewerContextMenuItem",
-            False
-        )
-        options.set_preference(
-            "browser.download.openInSystemViewerContextMenuItem",
-            False
-        )
+        # options.set_preference(
+        #     "browser.helperApps.alwaysAsk.force", False
+        # )
+        # options.set_preference(
+        #     "browser.download.manager.showWhenStarting", False
+        # )
+        # options.set_preference(
+        #     "browser.download.panel.shown", False
+        # )
+        # options.set_preference(
+        #     "browser.download.alwaysOpenInSystemViewerContextMenuItem",
+        #     False
+        # )
+        # options.set_preference(
+        #     "browser.download.openInSystemViewerContextMenuItem",
+        #     False
+        # )
         # options.set_preference("pdfjs.disabled", True)
         driver = webdriver.Firefox(
             firefox_options=options, service_log_path="geckodriver.log"

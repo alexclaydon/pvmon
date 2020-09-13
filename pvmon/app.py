@@ -8,7 +8,13 @@ from pvmon.client import Client
 
 load_dotenv()
 
-RESOURCES_PATH = Path.home() / 'dev' / 'projects' / 'pvmon' / 'pvmon' / 'resources'
+DEBUG = False
+
+if DEBUG:
+    RESOURCES_PATH = Path.home() / 'dev' / 'projects' / 'pvmon' / 'pvmon' / 'resources'
+else:
+    RESOURCES_PATH = Path('/app') / 'pvmon' / 'resources'
+
 CLIENTS_DATA_DIR = RESOURCES_PATH / 'client-data'
 CLIENTS_CONFIG_FILE = RESOURCES_PATH / 'service-cfg.yml'
 
