@@ -14,10 +14,8 @@ RUN apt-get update && apt-get install -y \
     gcc-8-base \
     firefox
 
-RUN   wget https://github.com/mozilla/geckodriver/releases/download/v0.27.0/geckodriver-v0.27.0-linux64.tar.gz
-
+RUN wget https://github.com/mozilla/geckodriver/releases/download/v0.27.0/geckodriver-v0.27.0-linux64.tar.gz
 RUN tar -xvzf geckodriver*
-
 RUN chmod +x geckodriver
 RUN mv geckodriver /usr/local/bin/
 RUN rm geckodriver-v0.27.0-linux64.tar.gz
