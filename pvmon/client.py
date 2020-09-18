@@ -1,23 +1,27 @@
-from liblogger.legacy import local_logger
+import http.client
+import os
+import urllib
+
 from pathlib import Path
-from pvmon.download import (
-    config_firefox_driver,
-    _load_cookies,
-    _pickle_cookies,
-    select_data_by_days,
-    encode_utf8,
-)
+
+from liblogger.legacy import local_logger
+
 from pvmon.analyse import (
+    analyse_data_consecutive_days_multi_sensor,
+    analyse_data_consecutive_days_single_sensor,
     load_data_for_multi_sensor_projects,
     load_data_for_single_sensor_projects,
     transform_data_for_multi_sensor_projects,
     transform_data_for_single_sensor_projects,
-    analyse_data_consecutive_days_multi_sensor,
-    analyse_data_consecutive_days_single_sensor
+)
+from pvmon.download import (
+    _load_cookies,
+    _pickle_cookies,
+    config_firefox_driver,
+    encode_utf8,
+    select_data_by_days,
 )
 from pvmon.notify import log_event
-from libnotify import notify_to_pushover
-
 
 # TODO: Consider whether BeautifulSoup could be a drop in replacement for Selenium
 
@@ -86,7 +90,7 @@ class Client:
         self.driver.get("https://eco-megane.jp/index.php")
         self.driver.find_element_by_id("personal_menu").click()
         self.driver.find_element_by_id("personal_edit").click()
-        select_data_by_days(self.driver, days=30)
+        select_data_by_days(self.driver, days=90)
         self.driver.find_element_by_id("measureGenerateAmountBtn").click()
         local_logger.info("Data successfully downloaded.")
         for file in self.data_dir.iterdir():
@@ -136,14 +140,25 @@ class Client:
         local_logger.info("Data successfully analysed.")
 
     def notify(self):
+        def notify_to_pushover(message: str):
+            conn = http.client.HTTPSConnection("api.pushover.net:443")
+            conn.request("POST", "/1/messages.json",
+                         urllib.parse.urlencode({
+                             "token": os.getenv("PUSHOVER_TOKEN"),
+                             "user": os.getenv("PUSHOVER_USER"),
+                             "message": message,
+                         }), { "Content-type": "application/x-www-form-urlencoded" })
+            conn.getresponse()
         if not self.analysis_multi_sensor:
             local_logger.warning('Please analyse multi-sensor data at least once before calling this method.')
         if self.analysis_multi_sensor:
             notify_to_pushover('Multi-sensor projects: ' + self.analysis_multi_sensor)
+            local_logger.info('Called notify_to_pushover() function for multi-sensir projects without exception')
         if not self.analysis_single_sensor:
             return local_logger.warning('Please analyse singe-sensor data at least once before calling this method.')
         if self.analysis_single_sensor:
-            notify_to_pushover('Multi-sensor projects: ' + self.analysis_single_sensor)
+            notify_to_pushover('Single-sensor projects: ' + self.analysis_single_sensor)
+            local_logger.info('Called notify_to_pushover() function for single-sensor projects without exception')
 
     def _close_driver(self):
         if not self.driver:

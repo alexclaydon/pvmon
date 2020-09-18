@@ -1,14 +1,13 @@
-from .context import pvmon
-
 from pvmon.analyse import (
-    load_data_for_single_sensor_projects,
-    load_data_for_multi_sensor_projects,
-    transform_data_for_multi_sensor_projects,
-    transform_data_for_single_sensor_projects,
     analyse_data_consecutive_days_multi_sensor,
     analyse_data_consecutive_days_single_sensor,
+    load_data_for_multi_sensor_projects,
+    load_data_for_single_sensor_projects,
+    transform_data_for_multi_sensor_projects,
+    transform_data_for_single_sensor_projects,
 )
 
+from .context import pvmon
 
 data = '/home/alexclaydon/dev/projects/pvmon/tests/resources/test_data.csv'
 
