@@ -1,5 +1,7 @@
 # pvmon
 
+![Docker Image CI](https://github.com/alexclaydon/pvmon/workflows/Docker%20Image%20CI/badge.svg)
+
 ![Python package](https://github.com/alexclaydon/pvmon/workflows/Python%20package/badge.svg)
 
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
