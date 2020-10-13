@@ -9,3 +9,4 @@ pytest-cov
 pre-commit
 black
 isort
+twilio>=6.37.0
