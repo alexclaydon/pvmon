@@ -11,7 +11,8 @@ RUN apt-get update && apt-get install -y \
 RUN add-apt-repository "deb http://deb.debian.org/debian/ unstable main contrib non-free"
 
 RUN apt-get update && apt-get install -y \
-    # gcc-8-base \
+    libc6-dev \
+    gcc-8-base \
     firefox
 
 RUN wget https://github.com/mozilla/geckodriver/releases/download/v0.27.0/geckodriver-v0.27.0-linux64.tar.gz
