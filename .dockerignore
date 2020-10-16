@@ -9,3 +9,4 @@ venv
 pvmon/resources/client-data
 pvmon/resources/db
 pvmon/resources/templates
+pvmon/geckodriver.log

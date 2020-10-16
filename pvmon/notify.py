@@ -1,4 +1,4 @@
-from liblogger.legacy import local_logger
+from pvmon.logger import local_logger
 from twilio.rest import Client
 
 

@@ -4,7 +4,7 @@ import urllib
 
 from pathlib import Path
 
-from liblogger.legacy import local_logger
+from pvmon.logger import local_logger
 
 from pvmon.analyse import (
     analyse_data_consecutive_days_multi_sensor,

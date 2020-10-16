@@ -3,7 +3,7 @@ import datetime
 import pickle
 import sys
 
-from liblogger.legacy import local_logger
+from pvmon.logger import local_logger
 from selenium import webdriver
 
 

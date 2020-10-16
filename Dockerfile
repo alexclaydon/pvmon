@@ -33,7 +33,7 @@ COPY . /app
 
 # Note that you'll need to temporarily copy any required libraries into the build context on account of the design of Docker; in this case I copy the required library into a /libs/ subfolder in the main project root folder on the dev machine before pip installing it (no need to install in editable mode as the image and box are disposable)
 
-RUN pip3 install /app/libs/liblogger
+# RUN pip3 install /app/libs/liblogger
 
 # Entrypoint
 CMD [ "python", "-m", "pvmon" ]

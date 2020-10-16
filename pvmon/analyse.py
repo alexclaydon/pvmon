@@ -1,5 +1,5 @@
 import pandas as pd
-from liblogger.legacy import local_logger
+from pvmon.logger import local_logger
 
 # TODO: To be refactored to make use of a validation library
 
