@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM python:3.7
 
 # Create app directory
 WORKDIR /app
@@ -6,12 +6,12 @@ WORKDIR /app
 # Install app dependencies
 
 RUN apt-get update && apt-get install -y \
-    python3-pip \
-    software-properties-common \
-    build-essential \
-    libssl-dev \
-    libffi-dev \
-    python3-dev \
+    software-properties-common
+
+RUN add-apt-repository "deb http://deb.debian.org/debian/ unstable main contrib non-free"
+
+RUN apt-get update && apt-get install -y \
+    gcc-8-base \
     firefox
 
 RUN wget https://github.com/mozilla/geckodriver/releases/download/v0.27.0/geckodriver-v0.27.0-linux64.tar.gz
@@ -22,7 +22,7 @@ RUN rm geckodriver-v0.27.0-linux64.tar.gz
 
 COPY requirements.txt ./
 
-RUN pip3 install -r requirements.txt
+RUN pip install -r requirements.txt
 
 # Bundle app source
 COPY . /app
