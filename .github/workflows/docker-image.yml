@@ -27,7 +27,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: alexclaydon/pvmon:latest
+          tags: ${{ github.repository }}:latest
+          secrets: ${{ secrets.GHCR_PAT }}
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
