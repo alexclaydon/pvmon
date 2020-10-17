@@ -27,9 +27,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ghcr.io/${{ github.repository }}:latest
+          tags: ghcr.io/${{ github.repository }}:$(date +%s)
 # Note that it's very important to preprend your tags with `ghcr.io/` when pushing to the GitHub Container Registry, as if you don't you will get the following error in your Github Actions build logs: "failed to solve: rpc error: code = Unknown desc = server message: insufficient_scope: authorization failed".  See [here](https://github.com/docker/build-push-action/issues/105).
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-
