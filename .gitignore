@@ -10,4 +10,3 @@
 /.env
 *.pyc
 *.log
-/libs/
