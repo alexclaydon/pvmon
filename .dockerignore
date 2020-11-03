@@ -1,12 +1,31 @@
-.git
+# OS
+.DS_Store
+/.un~
+
+# IDE
 .idea
-__pycache__
+
+# Repo
+.git
+.github
+
+# Build
+push-prod-image.sh
+docker-compose.yml
+.pre-commit-config.yaml
+setup.cfg
+
+# Compiled
 *.pyc
 *.pyo
 *.pyd
-.Python
 venv
+pvmon/__pycache__
+
+# Client data
 pvmon/resources/client-data
 pvmon/resources/db
 pvmon/resources/templates
+
+# Logs
 pvmon/geckodriver.log
