@@ -1,1 +1,1 @@
-from pvmon.app import Pvmon
+from .app import Pvmon
