@@ -9,11 +9,9 @@ from twilio.rest import Client
 # For a list of the logger variables used in this module, see: https://docs.python.org/3/library/logging.html
 
 
-logs_path = Path.home() / 'logs'
-if not Path.exists(logs_path):
-    Path.mkdir(logs_path)
+logs_path = Path.cwd()
 
-local_logger_file = logs_path / 'local_logger.log'
+local_logger_file = logs_path / 'pvmon.log'
 if not Path.exists(local_logger_file):
     local_logger_file.touch()
 
