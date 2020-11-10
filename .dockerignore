@@ -11,13 +11,14 @@ workspace.code-workspace
 .git
 .github
 .gitignore
-.dockerignore
 
 # Build
 push-prod-image.sh
 docker-compose.yml
 .pre-commit-config.yaml
 setup.cfg
+Dockerfile
+.dockerignore
 
 # Compiled
 *.pyc
