@@ -3,6 +3,7 @@ import os
 import sys
 import urllib
 from selenium.common.exceptions import NoSuchElementException
+from time import sleep
 
 from pathlib import Path
 
@@ -102,10 +103,14 @@ class Client:
         self.driver.find_element_by_id("personal_edit").click()
         select_data_by_days(self.driver, days=90)
         self.driver.find_element_by_id("measureGenerateAmountBtn").click()
-        local_logger.info("Data successfully downloaded.")
+        sleep(15)
         for file in self.data_dir.iterdir():
             if file.is_file() and "eco_megane" in file.as_posix():
+                local_logger.info("Data successfully downloaded.  Beginning re-encoding into utf-8.")
                 encode_utf8(file.as_posix())
+            else:
+                local_logger.error("Data was not successfully downloaded.")
+                sys.exit()
         self._locate_csv_production_data()
         self._close_driver()
         local_logger.info("Data successfully downloaded and re-encoded.")
