@@ -26,6 +26,7 @@ pvmon/__pycache__
 pvmon/resources/client-data
 pvmon/resources/db
 pvmon/resources/templates
+*.pkl
 
 # Logs
 pvmon/geckodriver.log
