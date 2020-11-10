@@ -4,10 +4,12 @@
 
 echo "Building Docker image and pushing to GitHub Container Registry (GHCR)" && sleep 1
 
-docker image build -t pvmon:latest . || { echo "Docker operation failed"; exit 1; }
+currentDate=$(date -I)
 
-docker tag pvmon:latest ghcr.io/alexclaydon/pvmon:latest
+docker image build -t pvmon:"$currentDate" . || { echo "Docker operation failed"; exit 1; }
 
-docker push ghcr.io/alexclaydon/pvmon:latest
+docker tag pvmon:"$currentDate" ghcr.io/alexclaydon/pvmon:"$currentDate"
+
+docker push ghcr.io/alexclaydon/pvmon:"$currentDate"
 
 echo "Custom container successfully pushed to GHCR"
