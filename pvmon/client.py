@@ -1,6 +1,8 @@
 import http.client
 import os
+import sys
 import urllib
+from selenium.common.exceptions import NoSuchElementException
 
 from pathlib import Path
 
@@ -88,7 +90,15 @@ class Client:
                 file.unlink()
                 local_logger.info("Old data deleted from data directory.")
         self.driver.get("https://eco-megane.jp/index.php")
-        self.driver.find_element_by_id("personal_menu").click()
+        try:
+            self.driver.find_element_by_id("personal_menu").click()
+        except NoSuchElementException as e:
+            local_logger.warning("The 'personal_menu' item was not found on the page; most likely this means that while a cookies files was present in the resources directory and successfully loaded, the cookies are stale and the browser has dumped you back to the login screen; deleting expired cookies file.  Please run again.")
+            for file in self.data_dir.iterdir():
+                if file.is_file() and "cookies" in file.as_posix():
+                    file.unlink()
+                    local_logger.info("Expired cookies deleted from data directory.")
+            sys.exit()
         self.driver.find_element_by_id("personal_edit").click()
         select_data_by_days(self.driver, days=90)
         self.driver.find_element_by_id("measureGenerateAmountBtn").click()
