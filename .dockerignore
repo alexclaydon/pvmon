@@ -4,10 +4,14 @@
 
 # IDE
 .idea
+.vscode
+workspace.code-workspace
 
 # Repo
 .git
 .github
+.gitignore
+.dockerignore
 
 # Build
 push-prod-image.sh
@@ -29,4 +33,4 @@ pvmon/resources/templates
 *.pkl
 
 # Logs
-pvmon/geckodriver.log
+geckodriver.log
