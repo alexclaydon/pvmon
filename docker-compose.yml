@@ -5,6 +5,6 @@ services:
   pvmon:
     image: ghcr.io/alexclaydon/pvmon:latest
     environment:
-      PUSHOVER_TOKEN: "aiwo8s3jg6a4qnz7pm1493kjqg2o54"
-      PUSHOVER_USER: "uddevyctfcn5myxpz973yex6stxw7n"
+      - PUSHOVER_TOKEN
+      - PUSHOVER_USER
     restart: unless-stopped
