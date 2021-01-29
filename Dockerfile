@@ -2,7 +2,7 @@ FROM ubuntu:latest
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Create app directory
-WORKDIR /app
+WORKDIR /workspace
 
 # Install app dependencies
 
@@ -27,7 +27,7 @@ COPY requirements.txt ./
 RUN pip3 install -r requirements.txt --no-cache-dir
 
 # Bundle app source
-COPY . /app
+COPY . /workspace
 
 # Entrypoint
 CMD [ "python3", "-m", "pvmon" ]

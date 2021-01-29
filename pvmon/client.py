@@ -33,10 +33,11 @@ class Client:
     def __init__(
             self,
             user_data: dict,
-            data_dir: Path,
+            client_dir: Path,
     ):
         self.user_data = user_data
-        self.data_dir = data_dir
+        self.client_dir = client_dir
+        self.download_dir = self.client_dir / 'data'
         self.driver = None
         self.logged_in = False
         self.csv_production_data = None
@@ -47,7 +48,7 @@ class Client:
         self.analysis_single_sensor = None
 
     def _locate_csv_production_data(self):
-        for file in self.data_dir.iterdir():
+        for file in self.download_dir.iterdir():
             if file.is_file() and "eco_megane" in file.as_posix():
                 self.csv_production_data = file.as_posix()
                 return local_logger.info("CSV production data located.")
@@ -56,9 +57,9 @@ class Client:
         if self.logged_in:
             return local_logger.info("Already logged in.  Proceeding to data download.")
         else:
-            self.driver = config_firefox_driver(self.data_dir)
-            if Path.exists(self.data_dir / "cookies.pkl"):
-                _load_cookies(self.driver, self.data_dir / "cookies.pkl")
+            self.driver = config_firefox_driver(self.download_dir)
+            if Path.exists(self.client_dir / "cookies.pkl"):
+                _load_cookies(self.driver, self.client_dir / "cookies.pkl")
             else:
                 self.driver.get("https://eco-megane.jp/index.php")
                 self.driver.find_element_by_css_selector(
@@ -76,7 +77,7 @@ class Client:
                     ".submit > span:nth-child(3)"
                 ).click()
                 _pickle_cookies(
-                    driver=self.driver, cookies_file=self.data_dir / "cookies.pkl"
+                    driver=self.driver, cookies_file=self.client_dir / "cookies.pkl"
                 )
             self.logged_in = True
             local_logger.info(
@@ -86,7 +87,7 @@ class Client:
     def download_data(self):
         if not self.logged_in:
             self._login()
-        for file in self.data_dir.iterdir():
+        for file in self.download_dir.iterdir():
             if file.is_file() and "eco_megane" in file.as_posix():
                 file.unlink()
                 local_logger.info("Old data deleted from data directory.")
@@ -95,7 +96,7 @@ class Client:
             self.driver.find_element_by_id("personal_menu").click()
         except NoSuchElementException as e:
             local_logger.warning("The 'personal_menu' item was not found on the page; most likely this means that while a cookies files was present in the resources directory and successfully loaded, the cookies are stale and the browser has dumped you back to the login screen; deleting expired cookies file.  Please run again.")
-            for file in self.data_dir.iterdir():
+            for file in self.client_dir.iterdir():
                 if file.is_file() and "cookies" in file.as_posix():
                     file.unlink()
                     local_logger.info("Expired cookies deleted from data directory.")
@@ -103,10 +104,10 @@ class Client:
         self.driver.find_element_by_id("personal_edit").click()
         select_data_by_days(self.driver, days=90)
         self.driver.find_element_by_id("measureGenerateAmountBtn").click()
-        sleep(15)
-        for file in self.data_dir.iterdir():
+        sleep(10)  # Wait until download has definitely completed
+        for file in self.download_dir.iterdir():
             if file.is_file() and "eco_megane" in file.as_posix():
-                local_logger.info("Data successfully downloaded.  Beginning re-encoding into utf-8.")
+                local_logger.info("Data successfully downloaded.")
                 encode_utf8(file.as_posix())
             else:
                 local_logger.error("Data was not successfully downloaded.")
