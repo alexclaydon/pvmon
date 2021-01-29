@@ -1,0 +1,12 @@
+{
+    "dockerFile": "Dockerfile.dev",
+    "workspaceFolder": "/workspace",
+    "workspaceMount": "source=/home/alexclaydon/dev/projects/pvmon/,target=/workspace,type=bind,consistency=cached",
+    "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "visualstudioexptteam.vscodeintellicode",
+        "esbenp.prettier-vscode",
+        "christian-kohler.path-intellisense",
+    ],
+}
