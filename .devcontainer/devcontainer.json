@@ -1,5 +1,5 @@
 {
-    "dockerFile": "Dockerfile.dev",
+    "dockerFile": "../Dockerfile.dev",
     "workspaceFolder": "/workspace",
     "workspaceMount": "source=/home/alexclaydon/dev/projects/pvmon/,target=/workspace,type=bind,consistency=cached",
     "extensions": [
