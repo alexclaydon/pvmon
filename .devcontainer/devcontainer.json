@@ -2,6 +2,14 @@
     "dockerFile": "../Dockerfile.dev",
     "workspaceFolder": "/workspace",
     "workspaceMount": "source=/home/alexclaydon/dev/projects/pvmon/,target=/workspace,type=bind,consistency=cached",
+    
+    "settings": { 
+		"terminal.integrated.shell.linux": "/bin/bash",
+		"python.pythonPath": "/usr/bin/python3",
+		"python.linting.enabled": true,
+		"python.linting.pylintEnabled": true,
+	},
+    
     "extensions": [
         "ms-python.python",
         "ms-python.vscode-pylance",
