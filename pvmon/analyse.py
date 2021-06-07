@@ -160,6 +160,7 @@ def analyse_data_consecutive_days_multi_sensor(df, days: int):
     """
     records = {}
     for project in df.index.get_level_values(0).unique():
+        local_logger.info(f"Analysing: {project}")
         select = df.loc[df.index.get_level_values(0).isin([project])]
         if days > len(select.index):
             local_logger.warning(
@@ -189,6 +190,7 @@ def analyse_data_consecutive_days_multi_sensor(df, days: int):
 def analyse_data_consecutive_days_single_sensor(df, days: int):
     records = {}
     for project in df.index.get_level_values(0).unique():
+        local_logger.info(f"Analysing: {project}")
         select = df.loc[df.index.get_level_values(0).isin([project])]
         if days > len(select.index):
             local_logger.warning(
