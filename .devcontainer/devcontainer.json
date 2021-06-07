@@ -19,6 +19,7 @@
     "ms-python.vscode-pylance",
     "visualstudioexptteam.vscodeintellicode",
     "esbenp.prettier-vscode",
-    "christian-kohler.path-intellisense"
+    "christian-kohler.path-intellisense",
+    "GrapeCity.gc-excelviewer"
   ]
 }
