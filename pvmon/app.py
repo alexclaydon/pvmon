@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import yaml
@@ -8,10 +9,8 @@ from pvmon.client import Client
 
 load_dotenv()
 
-DEBUG = False
-
-if DEBUG:
-    RESOURCES_PATH = Path.home() / 'dev' / 'projects' / 'pvmon' / 'pvmon' / 'resources'
+if os.getenv('DEBUG') == 'yes':
+    RESOURCES_PATH = Path('/workspaces') / 'pvmon' / 'pvmon' / 'resources'
 else:
     RESOURCES_PATH = Path('/workspace') / 'pvmon' / 'resources'
 
