@@ -1,20 +1,24 @@
 {
-    "dockerFile": "../Dockerfile.dev",
-    "workspaceFolder": "/workspace",
-    "workspaceMount": "source=/home/alexclaydon/dev/projects/pvmon/,target=/workspace,type=bind,consistency=cached",
-    
-    "settings": { 
-		"terminal.integrated.shell.linux": "/bin/bash",
-		"python.pythonPath": "/usr/bin/python3",
-		"python.linting.enabled": true,
-		"python.linting.pylintEnabled": true,
-	},
-    
-    "extensions": [
-        "ms-python.python",
-        "ms-python.vscode-pylance",
-        "visualstudioexptteam.vscodeintellicode",
-        "esbenp.prettier-vscode",
-        "christian-kohler.path-intellisense",
-    ],
+  "dockerFile": "../Dockerfile.dev",
+
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash",
+    "python.pythonPath": "/usr/bin/python3",
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[python]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true
+    }
+  },
+
+  "extensions": [
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "visualstudioexptteam.vscodeintellicode",
+    "esbenp.prettier-vscode",
+    "christian-kohler.path-intellisense"
+  ]
 }
