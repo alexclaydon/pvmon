@@ -169,7 +169,7 @@ class Client:
             local_logger.warning('Please analyse multi-sensor data at least once before calling this method.')
         if self.analysis_multi_sensor:
             notify_to_pushover('Multi-sensor projects: ' + self.analysis_multi_sensor)
-            local_logger.info('Called notify_to_pushover() function for multi-sensir projects without exception')
+            local_logger.info('Called notify_to_pushover() function for multi-sensor projects without exception')
         if not self.analysis_single_sensor:
             return local_logger.warning('Please analyse singe-sensor data at least once before calling this method.')
         if self.analysis_single_sensor:

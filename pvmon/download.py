@@ -15,7 +15,6 @@ def config_firefox_driver(download_dir: Path):
         options.headless = False
         # options.set_preference("browser.download.dir", download_dir.as_posix())
         options.set_preference("browser.download.dir", (os.getcwd() + '/pvmon/resources/client-data/sancon/data/'))
-        print((os.getcwd() + '/pvmon/resources/client-data/sancon/data/'))
         options.set_preference("browser.download.folderList", 2)
         options.set_preference(
             "browser.helperApps.neverAsk.saveToDisk",

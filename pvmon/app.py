@@ -44,9 +44,9 @@ class Pvmon:
 
         main()
 
-        if os.getenv('DEBUG') != 'yes':
-            scheduler = BlockingScheduler()
-            scheduler.add_job(
-                main, 'interval', hours=24
-            )
-            scheduler.start()
+        # if os.getenv('DEBUG') != 'yes':
+        #     scheduler = BlockingScheduler()
+        #     scheduler.add_job(
+        #         main, 'interval', hours=24
+        #     )
+        #     scheduler.start()
