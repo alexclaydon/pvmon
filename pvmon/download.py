@@ -1,5 +1,6 @@
 import codecs
 import datetime
+import os
 import pickle
 import sys
 from pathlib import Path
@@ -11,8 +12,10 @@ from selenium import webdriver
 def config_firefox_driver(download_dir: Path):
     try:
         options = webdriver.firefox.options.Options()
-        options.headless = True
-        options.set_preference("browser.download.dir", download_dir.as_posix())
+        options.headless = False
+        # options.set_preference("browser.download.dir", download_dir.as_posix())
+        options.set_preference("browser.download.dir", (os.getcwd() + '/pvmon/resources/client-data/sancon/data/'))
+        print((os.getcwd() + '/pvmon/resources/client-data/sancon/data/'))
         options.set_preference("browser.download.folderList", 2)
         options.set_preference(
             "browser.helperApps.neverAsk.saveToDisk",

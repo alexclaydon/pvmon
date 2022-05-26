@@ -11,6 +11,8 @@ load_dotenv()
 
 if os.getenv('DEBUG') == 'yes':
     RESOURCES_PATH = Path('/workspaces') / 'pvmon' / 'pvmon' / 'resources'
+if os.getenv('CONTAINER') == 'no':
+    RESOURCES_PATH = Path('pvmon') / 'resources'
 else:
     RESOURCES_PATH = Path('/workspace') / 'pvmon' / 'resources'
 
